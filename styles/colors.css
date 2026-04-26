@@ -1,0 +1,8 @@
+:root {
+  --primary-text: #030c01;
+  --primary-bg: #ffffff;
+  --secondary-bg: #f8f9f8;
+  --primary-button-bg: linear-gradient(90deg, #e8e81c 0%, #42ed13 100%);
+  --primary-button-hover-bg: linear-gradient(90deg, #d4d418 0%, #3ad411 100%);
+  --primary-button-text: #030c01;
+}
