@@ -1,96 +1,104 @@
-(() => {
-  const setupSlider = (wrapperSelector, listSelector, prevSelector, nextSelector, dotsContainerSelector) => {
-    const wrapper = document.querySelector(wrapperSelector);
-    if (!wrapper) return;
+// (() => {
+function setupSlider(
+  wrapperSelector,
+  listSelector,
+  prevSelector,
+  nextSelector,
+  dotsContainerSelector
+) {
+  const wrapper = document.querySelector(wrapperSelector);
+  if (!wrapper) return;
 
-    const list = wrapper.querySelector(listSelector);
-    const prevBtn = wrapper.querySelector(prevSelector);
-    const nextBtn = wrapper.querySelector(nextSelector);
-    const dotsContainer = wrapper.querySelector(dotsContainerSelector);
+  const list = wrapper.querySelector(listSelector);
+  const prevBtn = wrapper.querySelector(prevSelector);
+  const nextBtn = wrapper.querySelector(nextSelector);
+  const dotsContainer = wrapper.querySelector(dotsContainerSelector);
 
-    if (!list) return;
+  if (!list) return;
 
-    let dots = [];
-    if (dotsContainer) {
-      dotsContainer.innerHTML = '';
-      const itemsCount = list.children.length;
-      for (let i = 0; i < itemsCount; i++) {
-        const li = document.createElement('li');
-        li.classList.add('dot');
-        if (i === 0) li.classList.add('active');
-        dotsContainer.appendChild(li);
-      }
-      dots = dotsContainer.querySelectorAll('.dot');
+  let dots = [];
+  if (dotsContainer) {
+    dotsContainer.innerHTML = '';
+    const itemsCount = list.children.length;
+    // TODO: поправити калькуляцію точок
+    for (let i = 0; i < itemsCount; i++) {
+      const li = document.createElement('li');
+      li.classList.add('dot');
+      if (i === 0) li.classList.add('active');
+      dotsContainer.appendChild(li);
     }
+    dots = dotsContainer.querySelectorAll('.dot');
+  }
 
-    const scrollToItem = (index) => {
-      const items = list.children;
-      if (items.length === 0 || index < 0 || index >= items.length) return;
-      const itemWidth = items[0].getBoundingClientRect().width;
-      const gap = parseFloat(window.getComputedStyle(list).gap) || 0;
-      list.scrollTo({
-        left: index * (itemWidth + gap),
-        behavior: 'smooth'
-      });
-    };
+  function scrollToItem(index) {
+    console.log(list);
+    const items = list.children;
+    if (items.length === 0 || index < 0 || index >= items.length) return;
+    const itemWidth = items[0].getBoundingClientRect().width;
+    const gap = parseFloat(window.getComputedStyle(list).gap) || 0;
+    list.scrollTo({
+      left: index * (itemWidth + gap),
+      behavior: 'smooth',
+    });
+  }
 
-    const updateDots = () => {
-      if (!dots.length) return;
-      
-      const scrollPos = list.scrollLeft;
-      const itemWidth = list.children[0].getBoundingClientRect().width;
-      const gap = parseFloat(window.getComputedStyle(list).gap) || 0;
-      const fullWidth = itemWidth + gap;
-      
-      const index = Math.round(scrollPos / fullWidth);
-      
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('active', i === index);
-      });
-    };
+  const updateDots = () => {
+    if (!dots.length) return;
 
-    if (prevBtn) {
-      prevBtn.addEventListener('click', () => {
-        const itemWidth = list.children[0].getBoundingClientRect().width;
-        const gap = parseFloat(window.getComputedStyle(list).gap) || 0;
-        list.scrollBy({ left: -(itemWidth + gap), behavior: 'smooth' });
-      });
-    }
+    const scrollPos = list.scrollLeft;
+    const itemWidth = list.children[0].getBoundingClientRect().width;
+    const gap = parseFloat(window.getComputedStyle(list).gap) || 0;
+    const fullWidth = itemWidth + gap;
 
-    if (nextBtn) {
-      nextBtn.addEventListener('click', () => {
-        const itemWidth = list.children[0].getBoundingClientRect().width;
-        const gap = parseFloat(window.getComputedStyle(list).gap) || 0;
-        list.scrollBy({ left: itemWidth + gap, behavior: 'smooth' });
-      });
-    }
+    const index = Math.round(scrollPos / fullWidth);
 
-    if (dots.length) {
-      dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
-          scrollToItem(index);
-        });
-      });
-
-      list.addEventListener('scroll', () => {
-        requestAnimationFrame(updateDots);
-      });
-    }
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+    });
   };
 
-  setupSlider(
-    '.bestsellers-slider-wrapper',
-    '.bestsellers-list',
-    '.prev-btn',
-    '.next-btn',
-    '.pagination-dots'
-  );
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      const itemWidth = list.children[0].getBoundingClientRect().width;
+      const gap = parseFloat(window.getComputedStyle(list).gap) || 0;
+      list.scrollBy({ left: -(itemWidth + gap), behavior: 'smooth' });
+    });
+  }
 
-  setupSlider(
-    '.feedback-slider-wrapper',
-    '.feedbacks-list',
-    '.prev-btn',
-    '.next-btn',
-    '.pagination-dots'
-  );
-})();
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      const itemWidth = list.children[0].getBoundingClientRect().width;
+      const gap = parseFloat(window.getComputedStyle(list).gap) || 0;
+      list.scrollBy({ left: itemWidth + gap, behavior: 'smooth' });
+    });
+  }
+
+  if (dots.length) {
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        scrollToItem(index);
+      });
+    });
+
+    list.addEventListener('scroll', () => {
+      requestAnimationFrame(updateDots);
+    });
+  }
+}
+
+setupSlider(
+  '.bestsellers-slider-wrapper',
+  '.bestsellers-list',
+  '.prev-btn',
+  '.next-btn',
+  '.pagination-dots'
+);
+
+setupSlider(
+  '.feedback-slider-wrapper',
+  '.feedbacks-list',
+  '.prev-btn',
+  '.next-btn',
+  '.pagination-dots'
+);
+// })();
